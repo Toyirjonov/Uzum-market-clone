@@ -5,11 +5,11 @@ const theme = localStorage.getItem("theme");
 document.getElementById("current-year").textContent = new Date().getFullYear();
 if (theme) {
   html.dataset.theme = theme;
-  themeToggler.checked = theme === "coffee";
+  themeToggler.checked = theme === "karma";
 }
 
 themeToggler.addEventListener("click", () => {
-  html.dataset.theme = html.dataset.theme === "light" ? "coffee" : "light";
+  html.dataset.theme = html.dataset.theme === "light" ? "karma" : "light";
   localStorage.setItem("theme", html.dataset.theme);
-  themeToggler.checked = html.dataset.theme === "coffee";
+  themeToggler.checked = html.dataset.theme === "karma";
 });
