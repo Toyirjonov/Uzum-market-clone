@@ -1,48 +1,25 @@
 import { products } from "./data.js";
-import formatNumber from "./formatNumber.js";
 import "./searchProduct.js";
-import "./changeTheme.js";
+import { renderUi } from "./renderUi.js";
 
-const template = document.querySelector("template");
-const productList = document.querySelector(".products-list");
+const priceSort = document.getElementById("price-sort");
+const html = document.documentElement;
+const themeToggler = document.getElementById("theme-toggler");
+const theme = localStorage.getItem("theme");
 
-products.forEach((product) => {
-  const clone = template.content.cloneNode(true);
+document.getElementById("year").textContent = new Date().getFullYear();
 
-  // desructuring
-  const {
-    id,
-    card: _card,
-    thumbnail,
-    title,
-    rating: _rating,
-    description: _description,
-    price: _price,
-    discountPercentage,
-    reviews,
-  } = product;
+renderUi(products);
 
-  const card = clone.getElementById("card");
-  const cardImage = clone.querySelector(".card-image");
-  const cardTitle = clone.querySelector(".card-title");
-  const rating = clone.querySelector(".rating");
-  const comment = clone.querySelector(".comment");
-  const description = clone.querySelector(".description");
-  const price = clone.querySelector(".price");
-  const discountPriceEL = clone.querySelector(".discount-price");
+if (theme) {
+  html.dataset.theme = theme;
+  themeToggler.checked = theme === "karma";
+}
 
-  card.dataset.id = id;
-  cardTitle.textContent = title;
-  rating.textContent = _rating;
-  comment.textContent = reviews.length;
-  description.textContent = _description;
-  cardImage.src = thumbnail;
-  price.textContent = formatNumber(_price);
-
-  const discountPrice = formatNumber(_price, discountPercentage);
-  discountPriceEL.textContent = discountPrice;
-
-  productList.appendChild(clone);
+themeToggler.addEventListener("click", () => {
+  html.dataset.theme = html.dataset.theme === "light" ? "karma" : "light";
+  localStorage.setItem("theme", html.dataset.theme);
+  themeToggler.checked = html.dataset.theme === "karma";
 });
 
 const likeButtons = document.querySelectorAll(".like");
@@ -53,4 +30,22 @@ likeButtons.forEach((like) => {
     like.classList.toggle("fa-solid");
     like.classList.toggle("fa-regular");
   });
+});
+
+priceSort.addEventListener("change", (e) => {
+  const price =
+    e.target.options[e.target.selectedIndex].getAttribute("data-price");
+  const productsForSorting = [...products];
+
+  if (price == "low") {
+    const newSort = productsForSorting.sort((a, b) => {
+      return a.price - b.price;
+    });
+    renderUi(newSort);
+  } else {
+    const newSort = productsForSorting.sort((a, b) => {
+      return b.price - a.price;
+    });
+    renderUi(newSort);
+  }
 });
