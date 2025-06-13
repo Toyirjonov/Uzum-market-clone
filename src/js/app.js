@@ -42,10 +42,28 @@ priceSort.addEventListener("change", (e) => {
       return a.price - b.price;
     });
     renderUi(newSort);
+    const likeButtons = document.querySelectorAll(".like");
+
+    likeButtons.forEach((like) => {
+      like.addEventListener("click", () => {
+        like.classList.toggle("text-purple-500");
+        like.classList.toggle("fa-solid");
+        like.classList.toggle("fa-regular");
+      });
+    });
   } else {
     const newSort = productsForSorting.sort((a, b) => {
       return b.price - a.price;
     });
     renderUi(newSort);
+    const likeButtons = document.querySelectorAll(".like");
+
+    likeButtons.forEach((like) => {
+      like.addEventListener("click", () => {
+        like.classList.toggle("text-purple-500");
+        like.classList.toggle("fa-solid");
+        like.classList.toggle("fa-regular");
+      });
+    });
   }
 });
