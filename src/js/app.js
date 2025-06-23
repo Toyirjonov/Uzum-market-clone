@@ -1,6 +1,6 @@
-import { products } from "./data.js";
 import "./searchProduct.js";
 import { renderUi } from "./renderUi.js";
+import { request } from "./request.js";
 
 const priceSort = document.getElementById("price-sort");
 const html = document.documentElement;
@@ -9,7 +9,14 @@ const theme = localStorage.getItem("theme");
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
-renderUi(products);
+let product = [];
+
+request("https://dummyjson.com/products")
+  .then((data) => {
+    product = data || [];
+    renderUi(product);
+  })
+  .catch((error) => console.log(error));
 
 if (theme) {
   html.dataset.theme = theme;
@@ -22,14 +29,12 @@ themeToggler.addEventListener("click", () => {
   themeToggler.checked = html.dataset.theme === "karma";
 });
 
-const likeButtons = document.querySelectorAll(".like");
-
-likeButtons.forEach((like) => {
-  like.addEventListener("click", () => {
-    like.classList.toggle("text-purple-500");
-    like.classList.toggle("fa-solid");
-    like.classList.toggle("fa-regular");
-  });
+document.addEventListener("click", (event) => {
+  if (event.target.classList.contains("like")) {
+    event.target.classList.toggle("text-purple-500")
+      ? event.target.classList.replace("fa-regular", "fa-solid")
+      : event.target.classList.replace("fa-solid", "fa-regular");
+  }
 });
 
 priceSort.addEventListener("change", (e) => {
@@ -42,28 +47,10 @@ priceSort.addEventListener("change", (e) => {
       return a.price - b.price;
     });
     renderUi(newSort);
-    const likeButtons = document.querySelectorAll(".like");
-
-    likeButtons.forEach((like) => {
-      like.addEventListener("click", () => {
-        like.classList.toggle("text-purple-500");
-        like.classList.toggle("fa-solid");
-        like.classList.toggle("fa-regular");
-      });
-    });
   } else {
     const newSort = productsForSorting.sort((a, b) => {
       return b.price - a.price;
     });
     renderUi(newSort);
-    const likeButtons = document.querySelectorAll(".like");
-
-    likeButtons.forEach((like) => {
-      like.addEventListener("click", () => {
-        like.classList.toggle("text-purple-500");
-        like.classList.toggle("fa-solid");
-        like.classList.toggle("fa-regular");
-      });
-    });
   }
 });

@@ -4,7 +4,7 @@ import { addBasket } from "./busket.js";
 const template = document.querySelector("template");
 const productList = document.querySelector(".products-list");
 
-export function renderUi(products) {
+export function renderUi({ products }) {
   productList.textContent = "";
   products.forEach((product) => {
     const clone = template.content.cloneNode(true);
